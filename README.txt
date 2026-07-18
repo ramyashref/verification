@@ -1,8 +1,12 @@
-HIGHFIELD EGYPT CERTIFICATE VERIFICATION V4
+HIGHFIELD EGYPT CERTIFICATE VERIFICATION V5
 
-Files:
-- index.html
-- assets/certificate-template.png
+This version uses the certificate design with:
+- signatures
+- official Highfield stamp
+- fixed supervisor and manager details
 
-Upload BOTH index.html and the assets folder to the root of your GitHub repository.
-Do not upload the ZIP directly.
+Upload BOTH:
+1. index.html
+2. assets/certificate-template.png
+
+The assets folder must remain beside index.html.
