@@ -1,768 +1,1023 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Verify certificates issued by Highfield Egypt.">
-<title>Highfield Egypt | Certificate Verification</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Official Highfield Egypt certificate verification portal." />
+  <meta name="theme-color" content="#061a3d" />
+  <title>Highfield Egypt | Certificate Verification</title>
 
-<style>
-:root{
-  --navy:#061943;
-  --navy2:#0b2c68;
-  --blue:#176cff;
-  --blue2:#2d80ff;
-  --white:#fff;
-  --muted:#b9c6df;
-  --green:#16a34a;
-  --red:#dc2626;
-  --amber:#d97706;
-}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-*{box-sizing:border-box}
+  <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+    <rect width="64" height="64" rx="14" fill="%23091f4d"/>
+    <text x="32" y="40" text-anchor="middle" font-size="26" font-family="Arial" font-weight="700" fill="white">HE</text>
+  </svg>'>
 
-html{scroll-behavior:smooth}
+  <style>
+    :root{
+      --bg:#04132f;
+      --bg-2:#081e49;
+      --panel:rgba(8,30,73,.72);
+      --panel-strong:#0a2d68;
+      --line:rgba(132,168,233,.2);
+      --blue:#2d7dff;
+      --blue-2:#5ba0ff;
+      --white:#fff;
+      --text:#eaf2ff;
+      --muted:#aebdd7;
+      --surface:#f8fafc;
+      --ink:#0a1f47;
+      --green:#18b66b;
+      --amber:#d99219;
+      --red:#d54545;
+      --shadow:0 30px 80px rgba(0,0,0,.28);
+    }
 
-body{
-  margin:0;
-  min-height:100vh;
-  font-family:Arial,Helvetica,sans-serif;
-  color:var(--white);
-  background:
-    radial-gradient(circle at 50% 18%,rgba(30,98,255,.22),transparent 34%),
-    linear-gradient(135deg,#001033 0%,#072154 50%,#000b28 100%);
-}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:"Poppins",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 50% 8%,rgba(60,117,255,.26),transparent 26%),
+        radial-gradient(circle at 12% 40%,rgba(24,88,205,.18),transparent 24%),
+        linear-gradient(135deg,#02102a 0%,#062052 52%,#020b20 100%);
+      overflow-x:hidden;
+    }
 
-.page{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-}
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.35;
+      background-image:
+        linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+      background-size:42px 42px;
+      mask-image:linear-gradient(to bottom,black,transparent 85%);
+    }
 
-main{
-  width:min(1120px,calc(100% - 32px));
-  margin:0 auto;
-  padding:68px 0 40px;
-  flex:1;
-}
+    .shell{
+      width:min(1180px,calc(100% - 32px));
+      margin:0 auto;
+      position:relative;
+      z-index:1;
+    }
 
-.hero{
-  text-align:center;
-  margin-bottom:44px;
-}
+    .hero{
+      text-align:center;
+      padding:72px 0 38px;
+      animation:fadeUp .8s ease both;
+    }
 
-.hero h1{
-  margin:0;
-  font-size:clamp(46px,7vw,78px);
-  line-height:1.05;
-  font-weight:800;
-  letter-spacing:-2px;
-}
+    .brand{
+      margin:0;
+      font-size:clamp(48px,8vw,88px);
+      line-height:1;
+      font-weight:800;
+      letter-spacing:-3px;
+      color:#fff;
+      text-shadow:0 18px 45px rgba(22,91,255,.22);
+    }
 
-.hero h2{
-  margin:26px 0 18px;
-  font-size:clamp(27px,3vw,38px);
-}
+    .hero h2{
+      margin:22px 0 14px;
+      font-size:clamp(28px,3.4vw,42px);
+      line-height:1.2;
+      font-weight:700;
+    }
 
-.hero p{
-  margin:0;
-  font-size:clamp(17px,2vw,21px);
-  line-height:1.65;
-  color:rgba(255,255,255,.9);
-}
+    .hero p{
+      max-width:760px;
+      margin:0 auto;
+      color:var(--muted);
+      font-size:clamp(15px,1.8vw,19px);
+      line-height:1.8;
+    }
 
-.panel{
-  padding:32px 40px 34px;
-  border:1px solid rgba(75,136,255,.35);
-  border-radius:18px;
-  background:linear-gradient(135deg,rgba(7,43,101,.88),rgba(2,20,58,.9));
-  box-shadow:0 28px 80px rgba(0,0,0,.28);
-}
+    .search-panel{
+      margin-top:26px;
+      padding:26px;
+      border:1px solid rgba(89,141,255,.3);
+      border-radius:24px;
+      background:linear-gradient(145deg,rgba(15,53,120,.78),rgba(3,20,55,.82));
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(18px);
+      animation:fadeUp .8s .12s ease both;
+    }
 
-.panel-title{
-  position:relative;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:12px;
-  min-height:58px;
-  padding-bottom:20px;
-  margin-bottom:26px;
-  border-bottom:1px solid rgba(130,165,235,.22);
-  color:var(--blue2);
-  font-size:21px;
-  font-weight:700;
-}
+    .search-head{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      margin-bottom:20px;
+      font-weight:600;
+      color:var(--blue-2);
+    }
 
-.panel-title:after{
-  content:"";
-  position:absolute;
-  bottom:-1px;
-  left:50%;
-  transform:translateX(-50%);
-  width:48%;
-  height:4px;
-  border-radius:999px;
-  background:linear-gradient(90deg,var(--blue),var(--blue2));
-}
+    .icon{
+      width:22px;
+      height:22px;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:2;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
 
-.icon{
-  width:30px;
-  height:30px;
-  flex:0 0 auto;
-  fill:none;
-  stroke:currentColor;
-  stroke-width:1.8;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-}
+    .search-row{
+      display:flex;
+      gap:14px;
+      padding:10px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      background:rgba(255,255,255,.06);
+    }
 
-.search-form{
-  display:flex;
-  min-height:84px;
-  border-radius:14px;
-  overflow:hidden;
-  background:white;
-  box-shadow:0 14px 35px rgba(0,0,0,.2);
-}
+    .input-wrap{
+      position:relative;
+      flex:1;
+    }
 
-.input-wrap{
-  position:relative;
-  flex:1;
-  display:flex;
-  align-items:center;
-}
+    .input-wrap .icon{
+      position:absolute;
+      top:50%;
+      left:22px;
+      transform:translateY(-50%);
+      color:#24447c;
+      width:25px;
+      height:25px;
+    }
 
-.input-wrap .icon{
-  position:absolute;
-  left:27px;
-  color:#08245d;
-  pointer-events:none;
-}
+    input{
+      width:100%;
+      height:72px;
+      border:none;
+      outline:none;
+      border-radius:14px;
+      padding:0 22px 0 64px;
+      background:#fff;
+      color:#0a1f47;
+      font-family:inherit;
+      font-size:18px;
+      font-weight:500;
+      box-shadow:inset 0 0 0 1px rgba(13,55,132,.06);
+    }
 
-#certificate{
-  width:100%;
-  height:84px;
-  padding:0 24px 0 76px;
-  border:none;
-  outline:none;
-  background:transparent;
-  color:#071a47;
-  font-size:clamp(17px,2vw,22px);
-  font-weight:500;
-}
+    input::placeholder{color:#99a8c2}
 
-#certificate::placeholder{color:#9aa8c3}
+    button{
+      font-family:inherit;
+    }
 
-#certificate:focus{
-  box-shadow:inset 0 0 0 3px rgba(31,111,255,.15);
-}
+    .verify-btn{
+      min-width:190px;
+      border:none;
+      border-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      color:#fff;
+      background:linear-gradient(135deg,#1768ff,#2d88ff);
+      font-size:18px;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow:0 12px 28px rgba(38,114,255,.3);
+      transition:.22s ease;
+    }
 
-.verify-btn{
-  width:205px;
-  min-width:205px;
-  border:none;
-  border-radius:14px;
-  color:white;
-  background:linear-gradient(135deg,#0e5fff,#1979ff);
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:13px;
-  font-size:21px;
-  font-weight:700;
-  transition:.2s ease;
-}
+    .verify-btn:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.07);
+      box-shadow:0 18px 34px rgba(38,114,255,.38);
+    }
 
-.verify-btn:hover{
-  filter:brightness(1.08);
-  transform:translateY(-1px);
-  box-shadow:0 12px 32px rgba(23,109,255,.35);
-}
+    .verify-btn:disabled{
+      cursor:not-allowed;
+      opacity:.72;
+      transform:none;
+    }
 
-.verify-btn:disabled{
-  opacity:.72;
-  cursor:not-allowed;
-  transform:none;
-}
+    .hint{
+      margin:18px 0 0;
+      text-align:center;
+      color:#c8d5eb;
+      font-size:14px;
+    }
 
-.helper{
-  margin:28px 0 0;
-  text-align:center;
-  color:rgba(255,255,255,.88);
-  font-size:18px;
-  line-height:1.55;
-}
+    #result{
+      margin-top:28px;
+    }
 
-#result{
-  margin-top:28px;
-}
+    .message{
+      padding:20px;
+      border-radius:16px;
+      text-align:center;
+      border:1px solid rgba(92,144,255,.28);
+      background:rgba(6,31,76,.85);
+      box-shadow:var(--shadow);
+    }
 
-.message{
-  padding:22px 24px;
-  border-radius:14px;
-  text-align:center;
-  font-size:17px;
-  line-height:1.5;
-  background:rgba(5,35,88,.9);
-  border:1px solid rgba(95,150,255,.28);
-  box-shadow:0 18px 45px rgba(0,0,0,.22);
-}
+    .message.error{
+      color:#ffd7d7;
+      border-color:rgba(213,69,69,.45);
+      background:rgba(80,18,32,.8);
+    }
 
-.message.error{
-  color:#ffdcdc;
-  background:rgba(105,16,28,.84);
-  border-color:rgba(239,68,68,.5);
-}
+    .result-card{
+      overflow:hidden;
+      border-radius:26px;
+      background:var(--surface);
+      color:var(--ink);
+      box-shadow:0 35px 100px rgba(0,0,0,.36);
+      border:1px solid rgba(100,143,215,.3);
+      animation:fadeUp .5s ease both;
+    }
 
-.result-card{
-  overflow:hidden;
-  border-radius:20px;
-  background:linear-gradient(135deg,#fff,#f1f7ff);
-  color:#071a47;
-  border:1px solid rgba(82,142,255,.35);
-  box-shadow:0 30px 75px rgba(0,0,0,.3);
-  animation:show .4s ease;
-}
+    .result-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding:28px 30px;
+      color:#fff;
+      background:
+        radial-gradient(circle at 18% 20%,rgba(60,132,255,.32),transparent 26%),
+        linear-gradient(135deg,#0b3477,#031e4e);
+    }
 
-@keyframes show{
-  from{opacity:0;transform:translateY(14px)}
-  to{opacity:1;transform:translateY(0)}
-}
+    .verified-wrap{
+      display:flex;
+      align-items:center;
+      gap:16px;
+    }
 
-.result-head{
-  padding:26px 30px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:20px;
-  color:white;
-  background:linear-gradient(135deg,#063276,#001a4d);
-}
+    .verified-icon{
+      width:54px;
+      height:54px;
+      flex:0 0 54px;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      background:var(--green);
+      box-shadow:0 10px 24px rgba(24,182,107,.32);
+    }
 
-.result-title{
-  display:flex;
-  align-items:center;
-  gap:16px;
-}
+    .verified-icon .icon{
+      width:30px;
+      height:30px;
+      stroke-width:2.5;
+    }
 
-.check{
-  width:54px;
-  height:54px;
-  flex:0 0 54px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  background:var(--green);
-  box-shadow:0 8px 22px rgba(34,197,94,.35);
-}
+    .result-top h3{
+      margin:0 0 5px;
+      font-size:23px;
+    }
 
-.check .icon{
-  width:30px;
-  height:30px;
-  stroke-width:2.5;
-}
+    .result-top p{
+      margin:0;
+      color:rgba(255,255,255,.76);
+      font-size:13px;
+    }
 
-.result-head h3{
-  margin:0 0 5px;
-  font-size:24px;
-}
+    .status{
+      padding:10px 18px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.7px;
+    }
 
-.result-head p{
-  margin:0;
-  color:rgba(255,255,255,.78);
-  font-size:14px;
-}
+    .status.valid{color:#0b6c40;background:#dcfce7;border:1px solid #86efac}
+    .status.expired{color:#915b00;background:#fef3c7;border:1px solid #facc15}
+    .status.revoked,.status.invalid{color:#9f1c1c;background:#fee2e2;border:1px solid #fca5a5}
 
-.status{
-  min-width:92px;
-  padding:10px 18px;
-  border-radius:999px;
-  text-align:center;
-  text-transform:uppercase;
-  font-size:14px;
-  font-weight:800;
-  letter-spacing:.5px;
-}
+    .result-content{
+      padding:30px;
+    }
 
-.status.valid{color:#087438;background:#dcfce7;border:1px solid #86efac}
-.status.expired{color:#985e00;background:#fef3c7;border:1px solid #fcd34d}
-.status.revoked,.status.invalid{color:#a11212;background:#fee2e2;border:1px solid #fca5a5}
+    .result-layout{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 280px;
+      gap:26px;
+      align-items:start;
+    }
 
-.result-body{padding:30px}
+    .holder{
+      padding-bottom:22px;
+      margin-bottom:20px;
+      border-bottom:1px solid #dbe5f2;
+    }
 
-.holder{
-  margin-bottom:26px;
-  padding-bottom:24px;
-  border-bottom:1px solid #dce6f5;
-}
+    .eyebrow{
+      margin:0 0 7px;
+      color:#6a7891;
+      font-size:12px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.9px;
+    }
 
-.holder-label{
-  margin:0 0 6px;
-  color:#64748b;
-  font-size:13px;
-  font-weight:700;
-  text-transform:uppercase;
-  letter-spacing:.8px;
-}
+    .holder h4{
+      margin:0;
+      color:#08265f;
+      font-size:clamp(25px,3.2vw,34px);
+      line-height:1.3;
+    }
 
-.holder-name{
-  margin:0;
-  color:#06245c;
-  font-size:clamp(24px,3vw,31px);
-  line-height:1.3;
-}
+    .program{
+      margin-top:9px;
+      color:#315a9c;
+      font-size:17px;
+      font-weight:600;
+    }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:18px;
-}
+    .detail-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+    }
 
-.detail{
-  min-height:82px;
-  padding:16px 18px;
-  border:1px solid #e0e8f4;
-  border-radius:12px;
-  background:#f8fbff;
-}
+    .detail{
+      min-height:84px;
+      padding:16px;
+      border-radius:14px;
+      border:1px solid #dce6f2;
+      background:#f6f9fd;
+    }
 
-.detail.full{grid-column:1/-1}
+    .detail.full{grid-column:1/-1}
 
-.label{
-  display:block;
-  margin-bottom:7px;
-  color:#60708d;
-  font-size:12px;
-  font-weight:700;
-  text-transform:uppercase;
-  letter-spacing:.65px;
-}
+    .label{
+      display:block;
+      margin-bottom:7px;
+      color:#74839c;
+      font-size:11px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.7px;
+    }
 
-.value{
-  display:block;
-  color:#071a47;
-  font-size:16px;
-  font-weight:700;
-  line-height:1.4;
-  overflow-wrap:anywhere;
-}
+    .value{
+      display:block;
+      color:#0a1f47;
+      font-size:15px;
+      font-weight:700;
+      overflow-wrap:anywhere;
+    }
 
-.result-note{
-  padding:18px 30px;
-  text-align:center;
-  color:#53647f;
-  background:#eef4fb;
-  border-top:1px solid #dae4f2;
-  font-size:13px;
-  line-height:1.55;
-}
+    .side-card{
+      padding:20px;
+      border-radius:18px;
+      border:1px solid #dce6f2;
+      background:#fff;
+      box-shadow:0 16px 35px rgba(20,49,93,.08);
+      text-align:center;
+    }
 
-.features{
-  width:min(1040px,100%);
-  margin:48px auto 0;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:30px;
-}
+    .side-card h5{
+      margin:0 0 14px;
+      font-size:16px;
+    }
 
-.feature{
-  display:flex;
-  align-items:center;
-  gap:20px;
-  min-height:100px;
-}
+    #qr{
+      width:196px;
+      min-height:196px;
+      margin:0 auto 12px;
+      display:grid;
+      place-items:center;
+      border-radius:16px;
+      background:#fff;
+    }
 
-.feature:not(:last-child){
-  padding-right:30px;
-  border-right:1px solid rgba(135,169,230,.24);
-}
+    #qr canvas,#qr img{
+      max-width:100%;
+      border-radius:10px;
+    }
 
-.feature-circle{
-  width:86px;
-  height:86px;
-  flex:0 0 86px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  color:var(--blue2);
-  background:radial-gradient(circle,rgba(19,100,255,.22),rgba(10,48,118,.27));
-}
+    .qr-note{
+      margin:0;
+      color:#74839c;
+      font-size:12px;
+      line-height:1.5;
+    }
 
-.feature-circle .icon{
-  width:42px;
-  height:42px;
-}
+    .actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:18px;
+    }
 
-.feature h3{margin:0 0 8px;font-size:18px}
-.feature p{margin:0;color:rgba(255,255,255,.82);line-height:1.55}
+    .action-btn{
+      min-height:46px;
+      border-radius:12px;
+      border:1px solid #d6e1ef;
+      background:#f8fafc;
+      color:#12356e;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      font-size:13px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.2s ease;
+    }
 
-footer{
-  padding:26px 24px 34px;
-  text-align:center;
-  color:rgba(255,255,255,.76);
-  font-size:14px;
-}
+    .action-btn:hover{
+      border-color:#9bbcff;
+      transform:translateY(-1px);
+      background:#eef5ff;
+    }
 
-footer a{
-  color:var(--blue2);
-  text-decoration:none;
-}
+    .preview-section{
+      margin-top:26px;
+      padding-top:24px;
+      border-top:1px solid #dbe5f2;
+    }
 
-.sep{margin:0 14px;color:rgba(255,255,255,.3)}
+    .preview-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:14px;
+    }
 
-.spinner{
-  width:23px;
-  height:23px;
-  border:3px solid rgba(255,255,255,.35);
-  border-top-color:white;
-  border-radius:50%;
-  animation:spin .8s linear infinite;
-}
+    .preview-head h5{
+      margin:0;
+      font-size:17px;
+    }
 
-@keyframes spin{to{transform:rotate(360deg)}}
+    .preview-note{
+      color:#7b899e;
+      font-size:12px;
+    }
 
-@media(max-width:900px){
-  .features{grid-template-columns:1fr;max-width:650px;gap:14px}
-  .feature{padding:18px 0}
-  .feature:not(:last-child){
-    padding-right:0;
-    border-right:none;
-    border-bottom:1px solid rgba(135,169,230,.22)
-  }
-}
+    .certificate-preview{
+      position:relative;
+      aspect-ratio:1.414/1;
+      overflow:hidden;
+      border-radius:18px;
+      border:1px solid #d7e1ee;
+      background:
+        radial-gradient(circle at 50% 35%,rgba(44,112,255,.08),transparent 28%),
+        linear-gradient(135deg,#fff,#f2f6fb);
+      box-shadow:0 18px 50px rgba(18,42,83,.1);
+      cursor:pointer;
+    }
 
-@media(max-width:700px){
-  main{width:min(100% - 24px,1120px);padding-top:46px}
-  .hero h1{letter-spacing:-1px}
-  .panel{padding:24px 18px 26px}
-  .panel-title:after{width:80%}
-  .search-form{display:block;background:transparent;overflow:visible;box-shadow:none}
-  .input-wrap{
-    background:white;
-    border-radius:13px;
-    overflow:hidden;
-    box-shadow:0 14px 35px rgba(0,0,0,.18)
-  }
-  #certificate{height:70px;padding-left:66px;font-size:16px}
-  .input-wrap .icon{left:22px;width:28px;height:28px}
-  .verify-btn{
-    width:100%;
-    min-width:0;
-    height:64px;
-    margin-top:14px;
-    border-radius:13px;
-    font-size:18px
-  }
-  .helper{margin-top:22px;font-size:15px}
-  .result-head{align-items:flex-start;padding:23px 20px}
-  .result-head h3{font-size:20px}
-  .check{width:46px;height:46px;flex-basis:46px}
-  .status{min-width:auto;padding:8px 12px;font-size:11px}
-  .result-body{padding:22px 18px}
-  .grid{grid-template-columns:1fr}
-  .detail.full{grid-column:auto}
-  footer{line-height:1.9}
-  footer .sep{display:none}
-  footer span,footer a{display:block}
-}
+    .certificate-preview::before{
+      content:"";
+      position:absolute;
+      inset:18px;
+      border:2px solid #12356e;
+      opacity:.7;
+      border-radius:4px;
+    }
 
-@media print{
-  body{background:white}
-  .hero,.panel,.features,footer{display:none}
-  #result{margin:0}
-  .result-card{box-shadow:none;border:1px solid #ccd6e5}
-}
-</style>
+    .certificate-preview::after{
+      content:"";
+      position:absolute;
+      inset:28px;
+      border:1px solid #caa34b;
+      border-radius:2px;
+    }
+
+    .cert-inner{
+      position:absolute;
+      inset:0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:60px;
+      text-align:center;
+      z-index:1;
+    }
+
+    .cert-brand{
+      font-size:clamp(26px,4vw,52px);
+      font-weight:800;
+      color:#0b2e67;
+      letter-spacing:-1.8px;
+    }
+
+    .cert-title{
+      margin-top:10px;
+      color:#c2993a;
+      font-family:Georgia,serif;
+      font-size:clamp(20px,3vw,36px);
+      font-style:italic;
+    }
+
+    .cert-text{
+      margin:16px 0 8px;
+      color:#61708a;
+      font-size:clamp(10px,1.2vw,15px);
+    }
+
+    .cert-name{
+      color:#0b2e67;
+      font-family:Georgia,serif;
+      font-size:clamp(22px,3vw,40px);
+      font-weight:700;
+      border-bottom:1px solid #c7a451;
+      padding:0 28px 7px;
+    }
+
+    .cert-program{
+      margin-top:16px;
+      color:#15294e;
+      font-size:clamp(13px,1.6vw,19px);
+      font-weight:600;
+    }
+
+    .cert-footer{
+      margin-top:18px;
+      display:flex;
+      gap:24px;
+      color:#6e7d93;
+      font-size:clamp(9px,1vw,12px);
+    }
+
+    .legal-note{
+      padding:18px 30px;
+      text-align:center;
+      color:#66778f;
+      background:#eef4fb;
+      border-top:1px solid #dce6f2;
+      font-size:12px;
+      line-height:1.65;
+    }
+
+    .features{
+      margin:42px 0 0;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:20px;
+      animation:fadeUp .8s .2s ease both;
+    }
+
+    .feature{
+      padding:22px;
+      display:flex;
+      align-items:center;
+      gap:16px;
+      border:1px solid rgba(103,151,239,.16);
+      border-radius:18px;
+      background:rgba(8,31,75,.46);
+      backdrop-filter:blur(10px);
+    }
+
+    .feature-icon{
+      width:52px;
+      height:52px;
+      flex:0 0 52px;
+      display:grid;
+      place-items:center;
+      border-radius:14px;
+      color:var(--blue-2);
+      background:rgba(38,107,255,.14);
+    }
+
+    .feature h4{margin:0 0 6px;font-size:15px}
+    .feature p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
+
+    footer{
+      padding:30px 16px 38px;
+      text-align:center;
+      color:#8fa0bb;
+      font-size:12px;
+    }
+
+    .spinner{
+      width:22px;
+      height:22px;
+      border:3px solid rgba(255,255,255,.35);
+      border-top-color:#fff;
+      border-radius:50%;
+      animation:spin .8s linear infinite;
+    }
+
+    .modal{
+      position:fixed;
+      inset:0;
+      z-index:20;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      background:rgba(1,8,24,.88);
+      backdrop-filter:blur(12px);
+    }
+
+    .modal.show{display:flex}
+
+    .modal-content{
+      width:min(1180px,96vw);
+      max-height:92vh;
+      overflow:auto;
+      border-radius:20px;
+      background:#fff;
+      box-shadow:0 40px 120px rgba(0,0,0,.48);
+    }
+
+    .modal-bar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:15px 18px;
+      color:#0a1f47;
+      border-bottom:1px solid #e0e8f2;
+    }
+
+    .close-btn{
+      width:42px;
+      height:42px;
+      border:none;
+      border-radius:10px;
+      background:#eef3f9;
+      color:#12356e;
+      cursor:pointer;
+      font-size:20px;
+    }
+
+    @keyframes fadeUp{
+      from{opacity:0;transform:translateY(18px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    @media(max-width:900px){
+      .result-layout{grid-template-columns:1fr}
+      .features{grid-template-columns:1fr}
+      .side-card{display:grid;grid-template-columns:220px 1fr;align-items:center;text-align:left}
+      .actions{grid-template-columns:1fr}
+    }
+
+    @media(max-width:680px){
+      .shell{width:min(100% - 22px,1180px)}
+      .hero{padding-top:48px}
+      .brand{letter-spacing:-1.8px}
+      .search-panel{padding:18px}
+      .search-row{display:block;padding:0;background:transparent;border:none}
+      input{height:66px;font-size:16px}
+      .verify-btn{width:100%;height:60px;margin-top:12px}
+      .result-top{align-items:flex-start;padding:22px 18px}
+      .result-top h3{font-size:19px}
+      .status{padding:8px 11px;font-size:10px}
+      .result-content{padding:20px 16px}
+      .detail-grid{grid-template-columns:1fr}
+      .detail.full{grid-column:auto}
+      .side-card{display:block;text-align:center}
+      .cert-inner{padding:34px}
+      .certificate-preview::before{inset:10px}
+      .certificate-preview::after{inset:17px}
+      .preview-head{display:block}
+      .preview-note{display:block;margin-top:5px}
+    }
+
+    @media print{
+      body{background:#fff}
+      body::before,.hero,.search-panel,.features,footer,.actions,.preview-section{display:none!important}
+      .shell{width:100%}
+      #result{margin:0}
+      .result-card{box-shadow:none;border:1px solid #ccd7e5}
+      .result-layout{grid-template-columns:1fr 220px}
+      .legal-note{font-size:10px}
+    }
+  </style>
 </head>
 
 <body>
-<div class="page">
-<main>
+  <main class="shell">
+    <section class="hero">
+      <h1 class="brand">Highfield Egypt</h1>
+      <h2>Certificate Verification</h2>
+      <p>Verify the authenticity of certificates issued by Highfield Egypt through the official verification portal.</p>
+    </section>
 
-  <section class="hero">
-    <h1>Highfield Egypt</h1>
-    <h2>Certificate Verification</h2>
-    <p>
-      Verify the authenticity of Highfield Egypt certificates.<br>
-      Search using the certificate number.
-    </p>
-  </section>
+    <section class="search-panel">
+      <div class="search-head">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M6.5 16c.8-1.8 4.2-1.8 5 0"/><path d="M15 9h3M15 13h3"/></svg>
+        <span>Search by Certificate Number</span>
+      </div>
 
-  <section class="panel">
-    <div class="panel-title">
-      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-        <rect x="3" y="4" width="18" height="16" rx="2"></rect>
-        <circle cx="9" cy="10" r="2"></circle>
-        <path d="M6.5 16c.8-1.8 4.2-1.8 5 0"></path>
-        <path d="M15 9h3"></path>
-        <path d="M15 13h3"></path>
-      </svg>
-      <span>Search by Certificate Number</span>
+      <form id="verificationForm" class="search-row">
+        <div class="input-wrap">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M6.5 16c.8-1.8 4.2-1.8 5 0"/><path d="M15 9h3M15 13h3"/></svg>
+          <input id="certificate" type="text" placeholder="Enter Certificate Number" autocomplete="off" spellcheck="false">
+        </div>
+
+        <button id="verifyButton" class="verify-btn" type="submit">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+          <span id="buttonText">Verify</span>
+        </button>
+      </form>
+
+      <p class="hint">Enter the certificate number exactly as it appears on the certificate.</p>
+    </section>
+
+    <section id="result" aria-live="polite"></section>
+
+    <section class="features">
+      <article class="feature">
+        <div class="feature-icon">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.5 3.1 7.7 7.5 9.5 4.4-1.8 7.5-5 7.5-9.5V6L12 3Z"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+        <div><h4>Official Records</h4><p>Verification is performed directly against Highfield Egypt records.</p></div>
+      </article>
+
+      <article class="feature">
+        <div class="feature-icon">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M6 2h9l4 4v16H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M14 2v5h5M8 11h7M8 15h5"/></svg>
+        </div>
+        <div><h4>Trusted Verification</h4><p>Every result is linked to a unique certificate record.</p></div>
+      </article>
+
+      <article class="feature">
+        <div class="feature-icon">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M13.2 2 5 13.2h5.8L9.9 22 19 9.7h-5.8L13.2 2Z"/></svg>
+        </div>
+        <div><h4>Instant Results</h4><p>Certificate status and details appear immediately.</p></div>
+      </article>
+    </section>
+  </main>
+
+  <footer>© 2026 Highfield Egypt. All rights reserved.</footer>
+
+  <div id="previewModal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-bar">
+        <strong>Certificate Preview</strong>
+        <button id="closeModal" class="close-btn" type="button">×</button>
+      </div>
+      <div id="modalPreview"></div>
     </div>
+  </div>
 
-    <form id="verificationForm" class="search-form">
-      <div class="input-wrap">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <rect x="3" y="4" width="18" height="16" rx="2"></rect>
-          <circle cx="9" cy="10" r="2"></circle>
-          <path d="M6.5 16c.8-1.8 4.2-1.8 5 0"></path>
-          <path d="M15 9h3"></path>
-          <path d="M15 13h3"></path>
-        </svg>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-        <input
-          id="certificate"
-          type="text"
-          placeholder="Enter Certificate Number"
-          autocomplete="off"
-          spellcheck="false"
-        >
-      </div>
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbxiY5-9GpvLKwL3jUvn5H-7ooguNA40THLdqZqcqTQL32-Hht2DgMZIW8nl8gvMllg0jA/exec";
 
-      <button id="verifyButton" class="verify-btn" type="submit">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="11" cy="11" r="7"></circle>
-          <path d="m20 20-4-4"></path>
-        </svg>
-        <span id="buttonText">Verify</span>
-      </button>
-    </form>
+    const form = document.getElementById("verificationForm");
+    const input = document.getElementById("certificate");
+    const result = document.getElementById("result");
+    const button = document.getElementById("verifyButton");
+    const buttonText = document.getElementById("buttonText");
+    const modal = document.getElementById("previewModal");
+    const modalPreview = document.getElementById("modalPreview");
+    const closeModal = document.getElementById("closeModal");
 
-    <p class="helper">
-      Please enter the certificate number exactly as it appears on the certificate.
-    </p>
-  </section>
+    let currentCertificate = null;
 
-  <section id="result" aria-live="polite"></section>
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      verifyCertificate();
+    });
 
-  <section class="features">
-    <article class="feature">
-      <div class="feature-circle">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 3 4.5 6v5.5c0 4.5 3.1 7.7 7.5 9.5 4.4-1.8 7.5-5 7.5-9.5V6L12 3Z"></path>
-          <path d="m9 12 2 2 4-4"></path>
-        </svg>
-      </div>
-      <div>
-        <h3>100% Secure</h3>
-        <p>Data verified directly from official records.</p>
-      </div>
-    </article>
+    window.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(location.search);
+      const cert = params.get("certificate");
+      if(cert){
+        input.value = cert.trim();
+        verifyCertificate();
+      }
+    });
 
-    <article class="feature">
-      <div class="feature-circle">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M6 2h9l4 4v16H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"></path>
-          <path d="M14 2v5h5"></path>
-          <path d="M8 11h7"></path>
-          <path d="M8 15h5"></path>
-        </svg>
-      </div>
-      <div>
-        <h3>Trusted Verification</h3>
-        <p>Certificates issued by Highfield Egypt.</p>
-      </div>
-    </article>
+    closeModal.addEventListener("click", () => modal.classList.remove("show"));
+    modal.addEventListener("click", e => {
+      if(e.target === modal) modal.classList.remove("show");
+    });
 
-    <article class="feature">
-      <div class="feature-circle">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M13.2 2 5 13.2h5.8L9.9 22 19 9.7h-5.8L13.2 2Z"></path>
-        </svg>
-      </div>
-      <div>
-        <h3>Instant Results</h3>
-        <p>Get immediate verification results.</p>
-      </div>
-    </article>
-  </section>
+    function setLoading(loading){
+      button.disabled = loading;
+      const icon = button.querySelector("svg");
 
-</main>
-
-<footer>
-  <span>© 2026 Highfield Egypt. All rights reserved.</span>
-  <span class="sep">|</span>
-  <a href="#">Privacy Policy</a>
-  <span class="sep">|</span>
-  <a href="#">Terms of Use</a>
-</footer>
-</div>
-
-<script>
-const API_URL =
-  "https://script.google.com/macros/s/AKfycbxiY5-9GpvLKwL3jUvn5H-7ooguNA40THLdqZqcqTQL32-Hht2DgMZIW8nl8gvMllg0jA/exec";
-
-const form = document.getElementById("verificationForm");
-const input = document.getElementById("certificate");
-const result = document.getElementById("result");
-const button = document.getElementById("verifyButton");
-const buttonText = document.getElementById("buttonText");
-
-form.addEventListener("submit",function(e){
-  e.preventDefault();
-  verifyCertificate();
-});
-
-window.addEventListener("DOMContentLoaded",function(){
-  const params = new URLSearchParams(window.location.search);
-  const cert = params.get("certificate");
-
-  if(cert){
-    input.value = cert.trim();
-    verifyCertificate();
-  }
-});
-
-function setLoading(loading){
-  button.disabled = loading;
-  const icon = button.querySelector("svg");
-
-  if(loading){
-    icon.style.display = "none";
-    buttonText.innerHTML = '<span class="spinner"></span>';
-  }else{
-    icon.style.display = "block";
-    buttonText.textContent = "Verify";
-  }
-}
-
-function esc(value){
-  return String(value ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-function val(value){
-  const clean = String(value ?? "").trim();
-  return clean ? esc(clean) : "—";
-}
-
-function statusClass(status){
-  const s = String(status ?? "").trim().toLowerCase();
-  if(s === "valid") return "valid";
-  if(s === "expired") return "expired";
-  if(s === "revoked") return "revoked";
-  return "invalid";
-}
-
-function detail(label,value,full=false){
-  return `
-    <div class="detail ${full ? "full" : ""}">
-      <span class="label">${esc(label)}</span>
-      <span class="value">${val(value)}</span>
-    </div>
-  `;
-}
-
-async function verifyCertificate(){
-  const number = input.value.trim();
-  result.innerHTML = "";
-
-  if(!number){
-    result.innerHTML = '<div class="message error">Please enter a certificate number.</div>';
-    input.focus();
-    return;
-  }
-
-  setLoading(true);
-
-  try{
-    const response = await fetch(
-      API_URL + "?certificate=" + encodeURIComponent(number)
-    );
-
-    if(!response.ok){
-      throw new Error("Service error");
+      if(loading){
+        icon.style.display = "none";
+        buttonText.innerHTML = '<span class="spinner"></span>';
+      }else{
+        icon.style.display = "";
+        buttonText.textContent = "Verify";
+      }
     }
 
-    const data = await response.json();
-
-    if(!data.success || !data.certificate){
-      result.innerHTML = `
-        <div class="message error">
-          No certificate was found with this number.
-          Please check the number and try again.
-        </div>
-      `;
-      return;
+    function esc(value){
+      return String(value ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
     }
 
-    const c = data.certificate;
-    const status = c["Status"] || "Unknown";
-    const expiry = c["Expiry Date"] || c["Expirty Date"] || "";
+    function clean(value){
+      const v = String(value ?? "").trim();
+      return v ? esc(v) : "—";
+    }
 
-    result.innerHTML = `
-      <section class="result-card">
-        <div class="result-head">
-          <div class="result-title">
-            <div class="check">
-              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="m5 12 4 4L19 6"></path>
-              </svg>
+    function statusClass(status){
+      const s = String(status ?? "").trim().toLowerCase();
+      if(s === "valid") return "valid";
+      if(s === "expired") return "expired";
+      if(s === "revoked") return "revoked";
+      return "invalid";
+    }
+
+    function detail(label,value,full=false){
+      return `<div class="detail ${full ? "full" : ""}">
+        <span class="label">${esc(label)}</span>
+        <span class="value">${clean(value)}</span>
+      </div>`;
+    }
+
+    function previewTemplate(c){
+      return `<div class="certificate-preview">
+        <div class="cert-inner">
+          <div class="cert-brand">Highfield Egypt</div>
+          <div class="cert-title">Certificate of Completion</div>
+          <div class="cert-text">This is to certify that</div>
+          <div class="cert-name">${clean(c["Full Name"])}</div>
+          <div class="cert-text">has successfully completed</div>
+          <div class="cert-program">${clean(c["Program Name"])}</div>
+          <div class="cert-footer">
+            <span>Certificate No: ${clean(c["Certificate No"])}</span>
+            <span>Issue Date: ${clean(c["Issue Date"])}</span>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function openPreview(){
+      if(!currentCertificate) return;
+      modalPreview.innerHTML = previewTemplate(currentCertificate);
+      modal.classList.add("show");
+    }
+
+    function printVerification(){
+      window.print();
+    }
+
+    function downloadPDF(){
+      const card = document.querySelector(".result-card");
+      if(!card) return;
+
+      const filename = `${currentCertificate?.["Certificate No"] || "certificate-verification"}.pdf`;
+
+      html2pdf().set({
+        margin: 8,
+        filename,
+        image: {type:"jpeg",quality:.98},
+        html2canvas: {scale:2,useCORS:true},
+        jsPDF: {unit:"mm",format:"a4",orientation:"portrait"}
+      }).from(card).save();
+    }
+
+    async function verifyCertificate(){
+      const number = input.value.trim();
+      result.innerHTML = "";
+
+      if(!number){
+        result.innerHTML = '<div class="message error">Please enter a certificate number.</div>';
+        input.focus();
+        return;
+      }
+
+      setLoading(true);
+
+      try{
+        const response = await fetch(API_URL + "?certificate=" + encodeURIComponent(number));
+        if(!response.ok) throw new Error("Service error");
+
+        const data = await response.json();
+
+        if(!data.success || !data.certificate){
+          currentCertificate = null;
+          result.innerHTML = '<div class="message error">No certificate was found with this number. Please check the number and try again.</div>';
+          return;
+        }
+
+        const c = data.certificate;
+        currentCertificate = c;
+
+        const status = c["Status"] || "Unknown";
+        const expiry = c["Expiry Date"] || c["Expirty Date"] || "";
+        const directUrl = location.origin + location.pathname + "?certificate=" + encodeURIComponent(number);
+
+        result.innerHTML = `
+          <section class="result-card" id="verificationCard">
+            <div class="result-top">
+              <div class="verified-wrap">
+                <div class="verified-icon">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg>
+                </div>
+                <div>
+                  <h3>Official Certificate Verification</h3>
+                  <p>This record exists in the official Highfield Egypt database.</p>
+                </div>
+              </div>
+              <span class="status ${statusClass(status)}">${clean(status)}</span>
             </div>
-            <div>
-              <h3>Certificate Verified</h3>
-              <p>This record was found in the official Highfield Egypt database.</p>
+
+            <div class="result-content">
+              <div class="result-layout">
+                <div>
+                  <div class="holder">
+                    <p class="eyebrow">Certificate Holder</p>
+                    <h4>${clean(c["Full Name"])}</h4>
+                    <div class="program">${clean(c["Program Name"])}</div>
+                  </div>
+
+                  <div class="detail-grid">
+                    ${detail("Certificate Number",c["Certificate No"])}
+                    ${detail("License Number",c["License Number"])}
+                    ${detail("Issue Date",c["Issue Date"])}
+                    ${detail("Expiry Date",expiry)}
+                    ${detail("Training Hours",c["Training Hours"])}
+                    ${detail("CPD Points",c["CPD Points"])}
+                    ${detail("Accreditation Code",c["Accreditation Code"])}
+                    ${detail("Instructor",c["Instructor Name"])}
+                    ${detail("Provider",c["Provider"])}
+                    ${detail("Country",c["Country"])}
+                  </div>
+                </div>
+
+                <aside class="side-card">
+                  <div>
+                    <h5>Verify Online</h5>
+                    <div id="qr"></div>
+                    <p class="qr-note">Scan this QR code to open the official verification record.</p>
+                  </div>
+
+                  <div class="actions">
+                    <button class="action-btn" type="button" onclick="printVerification()">
+                      <svg class="icon" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+                      Print
+                    </button>
+                    <button class="action-btn" type="button" onclick="downloadPDF()">
+                      <svg class="icon" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+                      PDF
+                    </button>
+                  </div>
+                </aside>
+              </div>
+
+              <div class="preview-section">
+                <div class="preview-head">
+                  <h5>Certificate Preview</h5>
+                  <span class="preview-note">Click the preview to enlarge it.</span>
+                </div>
+                <div onclick="openPreview()">${previewTemplate(c)}</div>
+              </div>
             </div>
-          </div>
 
-          <span class="status ${statusClass(status)}">${val(status)}</span>
-        </div>
+            <div class="legal-note">
+              This verification confirms that the certificate record exists in the official Highfield Egypt database. It does not constitute a professional license or authorization to practice.
+            </div>
+          </section>
+        `;
 
-        <div class="result-body">
-          <div class="holder">
-            <p class="holder-label">Certificate Holder</p>
-            <h4 class="holder-name">${val(c["Full Name"])}</h4>
-          </div>
+        const qrEl = document.getElementById("qr");
+        if(window.QRCode){
+          new QRCode(qrEl,{
+            text:directUrl,
+            width:196,
+            height:196,
+            colorDark:"#0a1f47",
+            colorLight:"#ffffff",
+            correctLevel:QRCode.CorrectLevel.H
+          });
+        }else{
+          qrEl.textContent = "QR unavailable";
+        }
 
-          <div class="grid">
-            ${detail("Certificate Number",c["Certificate No"])}
-            ${detail("License Number",c["License Number"])}
-            ${detail("Program Name",c["Program Name"],true)}
-            ${detail("Issue Date",c["Issue Date"])}
-            ${detail("Expiry Date",expiry)}
-            ${detail("Training Hours",c["Training Hours"])}
-            ${detail("CPD Points",c["CPD Points"])}
-            ${detail("Accreditation Code",c["Accreditation Code"])}
-            ${detail("Instructor",c["Instructor Name"])}
-            ${detail("Provider",c["Provider"])}
-            ${detail("Country",c["Country"])}
-          </div>
-        </div>
+        history.replaceState({}, "", location.pathname + "?certificate=" + encodeURIComponent(number));
+        result.scrollIntoView({behavior:"smooth",block:"start"});
 
-        <div class="result-note">
-          This verification confirms that the certificate record exists in the
-          official Highfield Egypt database. It does not constitute a professional
-          license or authorization to practice.
-        </div>
-      </section>
-    `;
-
-    history.replaceState(
-      {},
-      "",
-      location.pathname + "?certificate=" + encodeURIComponent(number)
-    );
-
-    result.scrollIntoView({behavior:"smooth",block:"start"});
-
-  }catch(error){
-    console.error(error);
-    result.innerHTML = `
-      <div class="message error">
-        The verification service is temporarily unavailable.
-        Please try again.
-      </div>
-    `;
-  }finally{
-    setLoading(false);
-  }
-}
-</script>
+      }catch(error){
+        console.error(error);
+        currentCertificate = null;
+        result.innerHTML = '<div class="message error">The verification service is temporarily unavailable. Please try again.</div>';
+      }finally{
+        setLoading(false);
+      }
+    }
+  </script>
 </body>
 </html>
