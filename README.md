@@ -1,4 +1,4 @@
-# Highfield Egypt Certificate Verification v8
+# Highfield Egypt Certificate Verification v9
 
 ## Upload to GitHub Pages
 
@@ -13,7 +13,7 @@ The root should contain:
 - js/
 - assets/
 
-Do not upload the enclosing `highfield_verification_v8_final` folder itself.
+Do not upload the enclosing `highfield_verification_v9_final` folder itself.
 
 ## Current configuration
 
@@ -32,3 +32,12 @@ Edit these two values in `js/config.js`:
 
 After uploading, wait 1–3 minutes and refresh the GitHub Pages website using Ctrl + F5.
 On iPhone, open a private Safari tab if the old cached version still appears.
+
+
+## V9 visual updates
+
+- Removed the gold H icon.
+- Added the official HIGHFIELD / EGYPT white wordmark.
+- Increased spacing and readability of the main heading.
+- Improved desktop title sizing and line height.
+- Updated the service-worker cache name so the new design replaces the old cached version.

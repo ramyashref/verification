@@ -661,3 +661,84 @@ button{cursor:pointer}
 
 .cert-name.long-text{font-size:2.65cqw}
 .cert-program.long-text{font-size:2.95cqw}
+
+
+/* V9 — Highfield Egypt official wordmark */
+.wordmark-lockup{
+  min-width:214px;
+}
+
+.wordmark{
+  display:inline-flex;
+  flex-direction:column;
+  align-items:flex-end;
+  color:#fff;
+  line-height:1;
+  white-space:nowrap;
+}
+
+.wordmark strong{
+  display:block;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:29px;
+  font-weight:800;
+  letter-spacing:1.9px;
+  line-height:.95;
+}
+
+.wordmark small{
+  display:block;
+  margin-top:8px;
+  padding-right:2px;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:9.2px;
+  line-height:1;
+}
+
+.loader-wordmark{
+  align-items:center;
+}
+
+.loader-wordmark strong{
+  font-size:31px;
+}
+
+.loader-wordmark small{
+  padding-right:0;
+  margin-left:8px;
+}
+
+/* Better headline readability on large screens */
+.hero h1{
+  max-width:1030px;
+  font-size:clamp(38px,5.2vw,66px);
+  line-height:1.12;
+  letter-spacing:-1.15px;
+  word-spacing:2px;
+  text-wrap:balance;
+}
+
+.hero p{
+  max-width:760px;
+  letter-spacing:.05px;
+}
+
+.search-card{
+  max-width:1080px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+@media(min-width:1200px){
+  .hero{
+    padding-top:72px;
+  }
+
+  .hero h1{
+    font-size:64px;
+    line-height:1.13;
+    letter-spacing:-1px;
+  }
+}
