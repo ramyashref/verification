@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="Official Highfield Egypt certificate verification portal">
   <meta name="theme-color" content="#061a3d">
   <title>Highfield Egypt | Certificate Verification</title>
@@ -20,8 +20,11 @@
   <style>
     :root{
       --navy:#061a3d;
+      --navy-2:#0a2f6c;
       --blue:#2475ff;
+      --blue-2:#55a0ff;
       --surface:#f8fafc;
+      --white:#fff;
       --ink:#091d43;
       --muted:#71809a;
       --line:#dce5f1;
@@ -29,7 +32,7 @@
       --red:#cc3434;
       --amber:#d28a14;
       --certificate-bg:#fbf4e5;
-      --shadow:0 28px 80px rgba(0,0,0,.28);
+      --shadow:0 30px 90px rgba(0,0,0,.30);
     }
 
     *{box-sizing:border-box}
@@ -40,17 +43,33 @@
       font-family:"Poppins",sans-serif;
       color:#edf4ff;
       background:
-        radial-gradient(circle at 50% 5%,rgba(65,121,255,.25),transparent 25%),
+        radial-gradient(circle at 50% 4%,rgba(65,121,255,.28),transparent 25%),
+        radial-gradient(circle at 8% 45%,rgba(31,91,211,.14),transparent 24%),
         linear-gradient(135deg,#020d25 0%,#082253 50%,#020b1d 100%);
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.3;
+      background-image:
+        linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+      background-size:42px 42px;
     }
 
     .shell{
       width:min(1180px,calc(100% - 24px));
       margin:auto;
+      position:relative;
+      z-index:1;
     }
 
     .hero{
-      padding:54px 0 30px;
+      padding:56px 0 30px;
       text-align:center;
     }
 
@@ -60,11 +79,15 @@
       line-height:1;
       font-weight:800;
       letter-spacing:-3px;
+      opacity:0;
+      animation:heroIn .85s cubic-bezier(.22,.8,.24,1) .05s forwards;
     }
 
     .hero h2{
       margin:20px 0 12px;
       font-size:clamp(27px,3.5vw,42px);
+      opacity:0;
+      animation:heroIn .85s cubic-bezier(.22,.8,.24,1) .18s forwards;
     }
 
     .hero p{
@@ -73,6 +96,8 @@
       color:#b9c7dd;
       line-height:1.7;
       font-size:clamp(14px,1.7vw,18px);
+      opacity:0;
+      animation:heroIn .85s cubic-bezier(.22,.8,.24,1) .3s forwards;
     }
 
     .search-panel{
@@ -81,6 +106,9 @@
       border-radius:22px;
       background:linear-gradient(145deg,rgba(14,52,118,.8),rgba(3,18,49,.86));
       box-shadow:var(--shadow);
+      backdrop-filter:blur(16px);
+      opacity:0;
+      animation:heroIn .85s cubic-bezier(.22,.8,.24,1) .42s forwards;
     }
 
     .search-label{
@@ -135,6 +163,11 @@
       font-weight:500;
       color:#0a1f47;
       background:#fff;
+      transition:.2s ease;
+    }
+
+    input:focus{
+      box-shadow:0 0 0 4px rgba(50,124,255,.18);
     }
 
     button{font-family:inherit}
@@ -152,9 +185,20 @@
       font-size:17px;
       font-weight:700;
       cursor:pointer;
+      box-shadow:0 14px 30px rgba(36,117,255,.28);
+      transition:.2s ease;
     }
 
-    .verify-btn:disabled{opacity:.7;cursor:not-allowed}
+    .verify-btn:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.06);
+    }
+
+    .verify-btn:disabled{
+      opacity:.7;
+      cursor:not-allowed;
+      transform:none;
+    }
 
     .hint{
       margin:16px 0 0;
@@ -165,20 +209,6 @@
 
     #result{margin-top:26px}
 
-    .message{
-      padding:20px;
-      border-radius:16px;
-      text-align:center;
-      background:rgba(6,31,76,.88);
-      border:1px solid rgba(92,144,255,.3);
-    }
-
-    .message.error{
-      color:#ffd9d9;
-      background:rgba(82,18,31,.85);
-      border-color:rgba(220,69,69,.48);
-    }
-
     .result-card{
       overflow:hidden;
       border-radius:24px;
@@ -186,6 +216,7 @@
       background:var(--surface);
       border:1px solid rgba(91,137,211,.32);
       box-shadow:0 34px 100px rgba(0,0,0,.35);
+      animation:cardIn .55s cubic-bezier(.22,.8,.24,1) both;
     }
 
     .result-top{
@@ -195,7 +226,9 @@
       gap:20px;
       padding:24px 26px;
       color:#fff;
-      background:linear-gradient(135deg,#0b3478,#031d4b);
+      background:
+        radial-gradient(circle at 18% 25%,rgba(73,140,255,.3),transparent 23%),
+        linear-gradient(135deg,#0b3478,#031d4b);
     }
 
     .verified-group{
@@ -212,6 +245,8 @@
       place-items:center;
       border-radius:50%;
       background:var(--green);
+      box-shadow:0 12px 28px rgba(22,173,102,.32);
+      animation:checkPop .55s ease both;
     }
 
     .result-top h3{margin:0 0 4px;font-size:22px}
@@ -223,6 +258,7 @@
       text-transform:uppercase;
       font-size:11px;
       font-weight:800;
+      letter-spacing:.6px;
     }
 
     .status.valid{color:#087140;background:#dcfce7}
@@ -233,7 +269,7 @@
 
     .summary-layout{
       display:grid;
-      grid-template-columns:minmax(0,1fr) 250px;
+      grid-template-columns:minmax(0,1fr) 270px;
       gap:22px;
       align-items:start;
     }
@@ -278,6 +314,13 @@
       border:1px solid var(--line);
       border-radius:13px;
       background:#f5f8fc;
+      transition:.2s ease;
+    }
+
+    .detail:hover{
+      transform:translateY(-2px);
+      border-color:#b8cff6;
+      box-shadow:0 12px 24px rgba(21,57,112,.07);
     }
 
     .label{
@@ -287,6 +330,7 @@
       font-size:9px;
       font-weight:700;
       text-transform:uppercase;
+      letter-spacing:.6px;
     }
 
     .value{
@@ -297,30 +341,54 @@
     }
 
     .side-box{
-      padding:17px;
+      padding:18px;
       border:1px solid var(--line);
       border-radius:17px;
       background:#fff;
       text-align:center;
+      box-shadow:0 15px 35px rgba(18,45,88,.08);
     }
 
     .side-box h5{margin:0 0 12px;font-size:14px}
 
+    .qr-frame{
+      width:214px;
+      margin:0 auto;
+      padding:12px;
+      border:1px solid #dce6f2;
+      border-radius:18px;
+      background:
+        linear-gradient(#fff,#fff) padding-box,
+        linear-gradient(135deg,#2e7cff,#68a9ff) border-box;
+      box-shadow:0 12px 28px rgba(31,101,219,.10);
+    }
+
     #qr{
-      width:180px;
-      min-height:180px;
-      margin:0 auto 9px;
+      width:188px;
+      min-height:188px;
+      margin:auto;
       display:grid;
       place-items:center;
     }
 
-    #qr canvas,#qr img{max-width:100%}
+    #qr canvas,#qr img{max-width:100%;display:block}
 
     .qr-note{
-      margin:0;
+      margin:10px 0 0;
       color:#75839a;
       font-size:10px;
       line-height:1.5;
+    }
+
+    .verify-link{
+      margin-top:9px;
+      padding:9px 10px;
+      border-radius:10px;
+      background:#f4f7fb;
+      color:#52657e;
+      font-size:9px;
+      line-height:1.4;
+      overflow-wrap:anywhere;
     }
 
     .actions{
@@ -343,6 +411,13 @@
       font-size:11px;
       font-weight:700;
       cursor:pointer;
+      transition:.18s ease;
+    }
+
+    .action-btn:hover{
+      background:#edf4ff;
+      border-color:#9cbcff;
+      transform:translateY(-1px);
     }
 
     .preview-section{
@@ -361,6 +436,12 @@
 
     .preview-header h5{margin:0;font-size:16px}
     .preview-header span{color:#7b899e;font-size:10px}
+
+    .certificate-wrap{
+      width:100%;
+      overflow:hidden;
+      border-radius:14px;
+    }
 
     .certificate-stage{
       width:100%;
@@ -475,6 +556,137 @@
       line-height:1.6;
     }
 
+    /* Loading overlay */
+    .loading-overlay{
+      position:fixed;
+      inset:0;
+      z-index:50;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      background:rgba(2,10,30,.82);
+      backdrop-filter:blur(12px);
+    }
+
+    .loading-overlay.show{display:flex}
+
+    .loading-card{
+      width:min(390px,92vw);
+      padding:30px 24px;
+      text-align:center;
+      border:1px solid rgba(105,159,255,.25);
+      border-radius:22px;
+      color:#fff;
+      background:linear-gradient(145deg,rgba(16,51,113,.96),rgba(5,20,52,.96));
+      box-shadow:0 30px 90px rgba(0,0,0,.38);
+      animation:cardIn .35s ease both;
+    }
+
+    .loader-orbit{
+      position:relative;
+      width:84px;
+      height:84px;
+      margin:0 auto 18px;
+    }
+
+    .loader-orbit::before,
+    .loader-orbit::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      border:3px solid transparent;
+      border-top-color:#59a3ff;
+      animation:spin 1s linear infinite;
+    }
+
+    .loader-orbit::after{
+      inset:12px;
+      border-top-color:#fff;
+      animation-duration:.72s;
+      animation-direction:reverse;
+    }
+
+    .loader-core{
+      position:absolute;
+      inset:26px;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      background:#2475ff;
+      font-weight:800;
+      box-shadow:0 0 25px rgba(36,117,255,.45);
+    }
+
+    .loading-card h3{margin:0 0 7px;font-size:19px}
+    .loading-card p{margin:0;color:#b9c8df;font-size:12px;line-height:1.6}
+
+    /* Professional not-found state */
+    .not-found{
+      padding:34px 26px;
+      text-align:center;
+      color:var(--ink);
+      background:var(--surface);
+      border:1px solid rgba(91,137,211,.32);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      animation:cardIn .45s ease both;
+    }
+
+    .not-found-icon{
+      width:72px;
+      height:72px;
+      margin:0 auto 18px;
+      display:grid;
+      place-items:center;
+      border-radius:22px;
+      color:#fff;
+      background:linear-gradient(135deg,#e05c5c,#c93636);
+      box-shadow:0 18px 36px rgba(201,54,54,.22);
+    }
+
+    .not-found-icon .icon{width:34px;height:34px}
+    .not-found h3{margin:0 0 10px;font-size:24px;color:#0b2b62}
+    .not-found p{max-width:670px;margin:0 auto;color:#6b7b94;font-size:14px;line-height:1.75}
+
+    .early-note{
+      max-width:660px;
+      margin:18px auto 0;
+      padding:15px 17px;
+      border:1px solid #d9e6f7;
+      border-radius:14px;
+      color:#355883;
+      background:#eef5ff;
+      font-size:13px;
+      line-height:1.7;
+    }
+
+    .not-found-actions{
+      margin-top:20px;
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .primary-link,
+    .secondary-link{
+      min-height:48px;
+      padding:0 18px;
+      border-radius:12px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      text-decoration:none;
+      font-size:13px;
+      font-weight:700;
+    }
+
+    .primary-link{color:#fff;background:linear-gradient(135deg,#1768ff,#2d88ff)}
+    .secondary-link{color:#15366e;background:#f5f8fc;border:1px solid #d6e1ef}
+
     footer{
       padding:28px 15px 34px;
       text-align:center;
@@ -482,43 +694,40 @@
       font-size:10px;
     }
 
-    .spinner{
-      width:21px;
-      height:21px;
-      border:3px solid rgba(255,255,255,.35);
-      border-top-color:#fff;
-      border-radius:50%;
-      animation:spin .75s linear infinite;
-    }
-
     .modal{
       position:fixed;
       inset:0;
-      z-index:30;
+      z-index:40;
       display:none;
       align-items:center;
       justify-content:center;
       padding:12px;
-      background:rgba(1,8,24,.92);
+      background:rgba(1,8,24,.94);
+      backdrop-filter:blur(10px);
     }
 
     .modal.show{display:flex}
 
     .modal-card{
-      width:min(1400px,99vw);
+      width:min(1450px,99vw);
       max-height:97vh;
       overflow:auto;
       border-radius:16px;
       background:#fff;
+      box-shadow:0 40px 120px rgba(0,0,0,.55);
     }
 
     .modal-bar{
+      position:sticky;
+      top:0;
+      z-index:2;
       display:flex;
       align-items:center;
       justify-content:space-between;
       padding:12px 16px;
       color:#0a1f47;
       border-bottom:1px solid #e0e8f2;
+      background:#fff;
     }
 
     .close-btn{
@@ -529,13 +738,41 @@
       background:#edf2f8;
       color:#15366e;
       font-size:20px;
+      cursor:pointer;
+    }
+
+    /* High-resolution hidden certificate used only for PDF */
+    .pdf-stage{
+      position:fixed;
+      left:-10000px;
+      top:0;
+      width:2000px;
+      height:1414px;
+      container-type:inline-size;
+      background:var(--certificate-bg);
+    }
+
+    @keyframes heroIn{
+      from{opacity:0;transform:translateY(22px);filter:blur(6px)}
+      to{opacity:1;transform:translateY(0);filter:blur(0)}
+    }
+
+    @keyframes cardIn{
+      from{opacity:0;transform:translateY(18px) scale(.985)}
+      to{opacity:1;transform:translateY(0) scale(1)}
+    }
+
+    @keyframes checkPop{
+      0%{transform:scale(.6);opacity:0}
+      70%{transform:scale(1.08)}
+      100%{transform:scale(1);opacity:1}
     }
 
     @keyframes spin{to{transform:rotate(360deg)}}
 
     @media(max-width:900px){
       .summary-layout{grid-template-columns:1fr}
-      .side-box{display:grid;grid-template-columns:210px 1fr;align-items:center;text-align:left}
+      .side-box{display:grid;grid-template-columns:230px 1fr;align-items:center;text-align:left}
       .actions{grid-template-columns:1fr}
     }
 
@@ -563,6 +800,11 @@
       .side-box{display:block;text-align:center}
       .preview-header{padding:0 4px;display:block}
       .preview-header span{display:block;margin-top:4px}
+      .certificate-wrap{
+        width:100%;
+        overflow:hidden;
+        border-radius:8px;
+      }
       .certificate-stage{
         width:100%;
         border-radius:8px;
@@ -571,15 +813,20 @@
       .cert-name{font-size:3.1cqw;white-space:normal}
       .cert-program{font-size:3.3cqw}
       .legal-note{padding:14px 12px;font-size:9px}
+      .not-found{margin:0 10px;padding:28px 18px}
+      .not-found h3{font-size:21px}
+      .not-found p{font-size:13px}
+      .primary-link,.secondary-link{width:100%}
+      .modal{padding:0}
+      .modal-card{width:100vw;max-height:100vh;border-radius:0}
     }
 
     @media print{
       body{background:#fff}
-      .hero,.search-panel,footer,.actions,.preview-header{display:none!important}
+      .hero,.search-panel,footer,.actions,.preview-header,.side-box,.summary-layout,.result-top,.legal-note{display:none!important}
       .shell{width:100%}
       #result{margin:0}
       .result-card{box-shadow:none;border:0}
-      .result-top,.summary-layout,.legal-note{display:none}
       .result-body{padding:0}
       .preview-section{margin:0;padding:0;border:0}
       .certificate-stage{border:0;box-shadow:none;border-radius:0}
@@ -621,6 +868,14 @@
 
   <footer>© 2026 Highfield Egypt. All rights reserved.</footer>
 
+  <div id="loadingOverlay" class="loading-overlay" aria-hidden="true">
+    <div class="loading-card">
+      <div class="loader-orbit"><div class="loader-core">HE</div></div>
+      <h3>Verifying Certificate</h3>
+      <p>Please wait while we check the official Highfield Egypt records.</p>
+    </div>
+  </div>
+
   <div id="previewModal" class="modal">
     <div class="modal-card">
       <div class="modal-bar">
@@ -631,11 +886,14 @@
     </div>
   </div>
 
+  <div id="pdfContainer" class="pdf-stage"></div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbxiY5-9GpvLKwL3jUvn5H-7ooguNA40THLdqZqcqTQL32-Hht2DgMZIW8nl8gvMllg0jA/exec";
+    const WHATSAPP_NUMBER = "201080080203";
 
     const form = document.getElementById("verificationForm");
     const input = document.getElementById("certificate");
@@ -645,6 +903,8 @@
     const modal = document.getElementById("previewModal");
     const modalContent = document.getElementById("modalContent");
     const closeModal = document.getElementById("closeModal");
+    const loadingOverlay = document.getElementById("loadingOverlay");
+    const pdfContainer = document.getElementById("pdfContainer");
 
     let currentCertificate = null;
 
@@ -668,14 +928,8 @@
 
     function setLoading(loading){
       button.disabled = loading;
-      const icon = button.querySelector("svg");
-      if(loading){
-        icon.style.display = "none";
-        buttonText.innerHTML = '<span class="spinner"></span>';
-      }else{
-        icon.style.display = "";
-        buttonText.textContent = "Verify";
-      }
+      loadingOverlay.classList.toggle("show", loading);
+      loadingOverlay.setAttribute("aria-hidden", String(!loading));
     }
 
     function escapeHtml(v){
@@ -707,12 +961,12 @@
       </div>`;
     }
 
-    function certificateTemplate(c){
+    function certificateTemplate(c, id="certificateVisual"){
       const expiry = c["Expiry Date"] || c["Expirty Date"] || "";
       const serial = c["Certificate No"] || "";
 
       return `
-        <div class="certificate-stage" id="certificateVisual">
+        <div class="certificate-stage" id="${id}">
           <img src="certificate-template.png" alt="Highfield Egypt certificate">
 
           <div class="cover cover-name"></div>
@@ -736,7 +990,7 @@
 
     function openPreview(){
       if(!currentCertificate) return;
-      modalContent.innerHTML = certificateTemplate(currentCertificate);
+      modalContent.innerHTML = certificateTemplate(currentCertificate, "modalCertificate");
       modal.classList.add("show");
     }
 
@@ -744,18 +998,96 @@
       window.print();
     }
 
-    function downloadCertificate(){
-      const certificate = document.getElementById("certificateVisual");
-      if(!certificate || !currentCertificate) return;
+    async function copyVerificationLink(){
+      const link = location.href;
+      try{
+        await navigator.clipboard.writeText(link);
+        alert("Verification link copied.");
+      }catch{
+        prompt("Copy this verification link:", link);
+      }
+    }
+
+    async function downloadCertificate(){
+      if(!currentCertificate) return;
+
+      pdfContainer.innerHTML = certificateTemplate(currentCertificate, "pdfCertificate");
+      const certificate = document.getElementById("pdfCertificate");
+
+      await new Promise(resolve => {
+        const img = certificate.querySelector("img");
+        if(img.complete) resolve();
+        else{
+          img.onload = resolve;
+          img.onerror = resolve;
+        }
+      });
+
+      const filename = `${currentCertificate["Certificate No"] || "Highfield-Certificate"}.pdf`;
 
       html2pdf().set({
         margin:0,
-        filename:`${currentCertificate["Certificate No"] || "Highfield-Certificate"}.pdf`,
+        filename,
         image:{type:"jpeg",quality:1},
-        html2canvas:{scale:3,useCORS:true,backgroundColor:"#fbf4e5"},
-        jsPDF:{unit:"mm",format:"a4",orientation:"landscape"},
+        html2canvas:{
+          scale:2,
+          useCORS:true,
+          backgroundColor:"#fbf4e5",
+          width:2000,
+          height:1414,
+          windowWidth:2000,
+          windowHeight:1414,
+          scrollX:0,
+          scrollY:0
+        },
+        jsPDF:{
+          unit:"mm",
+          format:"a4",
+          orientation:"landscape",
+          compress:true
+        },
         pagebreak:{mode:["avoid-all"]}
       }).from(certificate).save();
+    }
+
+    function renderNotFound(number){
+      const message = encodeURIComponent(
+        `Hello Highfield Egypt, I searched for certificate number ${number}, but it was not found. I would like to know more about your available programs.`
+      );
+
+      result.innerHTML = `
+        <section class="not-found">
+          <div class="not-found-icon">
+            <svg class="icon" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m20 20-4-4"></path>
+              <path d="M11 8v4"></path>
+              <path d="M11 15h.01"></path>
+            </svg>
+          </div>
+
+          <h3>Certificate Not Found</h3>
+          <p>
+            We could not find a certificate matching
+            <strong>${escapeHtml(number)}</strong>.
+            Please check the certificate number and try again.
+          </p>
+
+          <div class="early-note">
+            It may simply be too early and the certificate has not been issued yet.
+            You can contact Highfield Egypt, learn about the program, and apply to join an upcoming intake.
+          </div>
+
+          <div class="not-found-actions">
+            <a class="primary-link" href="https://wa.me/${WHATSAPP_NUMBER}?text=${message}" target="_blank" rel="noopener">
+              Contact Us on WhatsApp
+            </a>
+            <a class="secondary-link" href="javascript:void(0)" onclick="input.focus();window.scrollTo({top:0,behavior:'smooth'})">
+              Try Another Number
+            </a>
+          </div>
+        </section>
+      `;
     }
 
     async function verifyCertificate(){
@@ -763,7 +1095,8 @@
       result.innerHTML = "";
 
       if(!number){
-        result.innerHTML = '<div class="message error">Please enter a certificate number.</div>';
+        renderNotFound("No number entered");
+        input.focus();
         return;
       }
 
@@ -777,7 +1110,7 @@
 
         if(!data.success || !data.certificate){
           currentCertificate = null;
-          result.innerHTML = '<div class="message error">No certificate was found with this number.</div>';
+          renderNotFound(number);
           return;
         }
 
@@ -828,12 +1161,15 @@
 
                 <aside class="side-box">
                   <h5>Verify Online</h5>
-                  <div id="qr"></div>
+                  <div class="qr-frame"><div id="qr"></div></div>
                   <p class="qr-note">Scan this QR code to open the official verification record.</p>
+                  <div class="verify-link">${escapeHtml(directUrl)}</div>
 
                   <div class="actions">
+                    <button class="action-btn" type="button" onclick="copyVerificationLink()">Copy Link</button>
+                    <button class="action-btn" type="button" onclick="downloadCertificate()">Download PDF</button>
                     <button class="action-btn" type="button" onclick="printCertificate()">Print</button>
-                    <button class="action-btn" type="button" onclick="downloadCertificate()">PDF</button>
+                    <button class="action-btn" type="button" onclick="openPreview()">Full Screen</button>
                   </div>
                 </aside>
               </div>
@@ -841,10 +1177,10 @@
               <section class="preview-section">
                 <div class="preview-header">
                   <h5>Certificate Preview</h5>
-                  <span>Click the certificate to view it full screen.</span>
+                  <span>Tap the certificate to open it in full screen.</span>
                 </div>
 
-                <div onclick="openPreview()">
+                <div class="certificate-wrap" onclick="openPreview()">
                   ${certificateTemplate(c)}
                 </div>
               </section>
@@ -858,9 +1194,9 @@
 
         new QRCode(document.getElementById("qr"),{
           text:directUrl,
-          width:180,
-          height:180,
-          colorDark:"#091d43",
+          width:188,
+          height:188,
+          colorDark:"#071a3f",
           colorLight:"#ffffff",
           correctLevel:QRCode.CorrectLevel.H
         });
@@ -870,7 +1206,19 @@
       }catch(error){
         console.error(error);
         currentCertificate = null;
-        result.innerHTML = '<div class="message error">The verification service is temporarily unavailable.</div>';
+        result.innerHTML = `
+          <section class="not-found">
+            <div class="not-found-icon">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M12 9v4"></path>
+                <path d="M12 17h.01"></path>
+                <path d="M10.3 3.7 2.5 17.2A2 2 0 0 0 4.2 20h15.6a2 2 0 0 0 1.7-2.8L13.7 3.7a2 2 0 0 0-3.4 0Z"></path>
+              </svg>
+            </div>
+            <h3>Verification Service Unavailable</h3>
+            <p>The verification service is temporarily unavailable. Please try again in a moment.</p>
+          </section>
+        `;
       }finally{
         setLoading(false);
       }
