@@ -41,3 +41,15 @@ On iPhone, open a private Safari tab if the old cached version still appears.
 - Increased spacing and readability of the main heading.
 - Improved desktop title sizing and line height.
 - Updated the service-worker cache name so the new design replaces the old cached version.
+
+
+## V10 verification-result upgrades
+
+- Enhanced verified-success animation and status information.
+- Added verification timestamp.
+- Expanded certificate details, including instructor and accreditation.
+- Added QR security frame with a centered Highfield mark.
+- Added Copy, Share and Verify Another Certificate actions.
+- Added toast notifications.
+- Improved mobile result layout.
+- Updated the service worker cache name.

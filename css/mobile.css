@@ -114,3 +114,27 @@
     letter-spacing:-.45px;
   }
 }
+
+
+@media(max-width:700px){
+  .success-banner{
+    flex-wrap:wrap;
+  }
+
+  .success-meta{
+    flex-wrap:wrap;
+    gap:7px;
+  }
+
+  .side-actions{
+    grid-template-columns:1fr;
+  }
+
+  .toast{
+    right:10px;
+    bottom:10px;
+    left:10px;
+    max-width:none;
+    text-align:center;
+  }
+}

@@ -14,9 +14,12 @@
   const zoomInButton = document.getElementById("zoomInButton");
   const zoomOutButton = document.getElementById("zoomOutButton");
   const resetZoomButton = document.getElementById("resetZoomButton");
+  const toast = document.getElementById("toast");
 
   let currentCertificate = null;
+  let currentQueryNumber = "";
   let currentZoom = 1;
+  let toastTimer = null;
 
   form.addEventListener("submit", event => {
     event.preventDefault();
@@ -43,6 +46,15 @@
   zoomOutButton.addEventListener("click", () => setZoom(currentZoom - .15));
   resetZoomButton.addEventListener("click", () => setZoom(1));
 
+  function showToast(message,type="success"){
+    clearTimeout(toastTimer);
+    toast.textContent = message;
+    toast.className = `toast show ${type}`;
+    toastTimer = setTimeout(() => {
+      toast.className = "toast";
+    },2200);
+  }
+
   function setLoading(active){
     verifyButton.disabled = active;
     loadingOverlay.classList.toggle("show",active);
@@ -58,12 +70,25 @@
     `;
   }
 
-  function renderSuccess(certificate, queryNumber){
-    currentCertificate = certificate;
+  function normalizedCertificate(certificate){
+    return {
+      ...certificate,
+      expiry: certificate["Expiry Date"] || certificate["Expirty Date"] || "",
+      serial: certificate["Certificate No"] || currentQueryNumber || "",
+      status: certificate["Status"] || "Unknown"
+    };
+  }
 
-    const expiry = certificate["Expiry Date"] || certificate["Expirty Date"] || "";
-    const status = certificate["Status"] || "Unknown";
+  function renderSuccess(rawCertificate,queryNumber){
+    const certificate = normalizedCertificate(rawCertificate);
+    currentCertificate = rawCertificate;
+    currentQueryNumber = queryNumber;
+
     const url = U.directUrl(queryNumber);
+    const verifiedAt = new Intl.DateTimeFormat("en-GB",{
+      dateStyle:"medium",
+      timeStyle:"short"
+    }).format(new Date());
 
     resultArea.innerHTML = `
       <div class="result-grid">
@@ -75,43 +100,80 @@
               </div>
               <div>
                 <h2>Certificate Verified Successfully</h2>
-                <p>This certificate is present in the official Highfield Egypt database.</p>
+                <p>This record was retrieved from the official Highfield Egypt database.</p>
+                <div class="certificate-holder-line">${U.safeValue(certificate["Full Name"])}</div>
+                <div class="success-meta">
+                  <span class="verified-time">◷ Verified ${U.escapeHtml(verifiedAt)}</span>
+                  <span>•</span>
+                  <span>Certificate No. ${U.safeValue(certificate.serial)}</span>
+                </div>
               </div>
             </div>
-            <span class="status-pill ${U.statusClass(status)}">${U.safeValue(status)}</span>
+            <span class="status-pill ${U.statusClass(certificate.status)}">${U.safeValue(certificate.status)}</span>
           </div>
 
-          <div class="certificate-panel" id="certificatePreviewTrigger">
-            ${HighfieldCertificate.render(certificate)}
+          <div class="certificate-panel" id="certificatePreviewTrigger" title="Tap to open full-screen preview">
+            ${HighfieldCertificate.render(rawCertificate)}
           </div>
 
           <div class="action-bar">
-            <button class="action-button" id="downloadPdfButton" type="button">Download PDF</button>
-            <button class="action-button" id="printButton" type="button">Print Certificate</button>
-            <button class="action-button" id="shareButton" type="button">Share Certificate</button>
+            <button class="action-button" id="downloadPdfButton" type="button">
+              <span class="button-icon">⇩</span> Download PDF
+            </button>
+            <button class="action-button" id="printButton" type="button">
+              <span class="button-icon">▣</span> Print Certificate
+            </button>
+            <button class="action-button" id="shareButton" type="button">
+              <span class="button-icon">⌁</span> Share Certificate
+            </button>
           </div>
         </section>
 
         <aside class="side-column">
-          <section class="side-card">
+          <section class="side-card highlight-card">
             <h3>Certificate Details</h3>
             <div class="detail-list">
-              ${detail("№","Certificate Number",certificate["Certificate No"])}
+              ${detail("№","Certificate Number",certificate.serial)}
               ${detail("◇","Accreditation Code",certificate["Accreditation Code"])}
               ${detail("▣","Program",certificate["Program Name"])}
-              ${detail("◷","Period",`${certificate["Issue Date"] || "—"} to ${expiry || "—"}`)}
+              ${detail("◷","Issue Date",certificate["Issue Date"])}
+              ${detail("⌛","Expiry Date",certificate.expiry)}
               ${detail("✦","Training Hours",certificate["Training Hours"])}
               ${detail("●","CPD Points",certificate["CPD Points"])}
+            </div>
+
+            <div class="detail-section-title">Provider and Academic Information</div>
+            <div class="detail-list">
               ${detail("H","Provider",certificate["Provider"])}
-              ${detail("✓","Status",status)}
+              ${detail("I","Instructor",certificate["Instructor Name"])}
+              ${detail("A","Accredited By",certificate["Accredited By"] || "Egyptian Health Council")}
+              ${detail("⌖","Country",certificate["Country"])}
+              ${detail("✓","Status",certificate.status)}
+            </div>
+
+            <div class="database-seal">
+              <span>✓</span>
+              <div>This verification reflects the record currently stored in the official Highfield Egypt database.</div>
             </div>
           </section>
 
           <section class="side-card">
             <h3>Verify this Certificate</h3>
-            <div class="qr-frame"><div id="qrCode"></div></div>
+            <div class="qr-frame">
+              <div class="qr-wrap">
+                <div id="qrCode"></div>
+                <div class="qr-center-mark">HF</div>
+              </div>
+            </div>
             <p class="qr-caption">Scan the QR code to open the official verification record.</p>
-            <button class="copy-button" id="copyLinkButton" type="button">Copy Verification Link</button>
+            <div class="qr-security-line">✓ Secure verification link</div>
+
+            <div class="side-actions">
+              <button id="copyLinkButton" type="button">Copy Link</button>
+              <button id="sideShareButton" type="button">Share</button>
+            </div>
+
+            <button class="verify-another" id="verifyAnotherButton" type="button">Verify Another Certificate</button>
           </section>
         </aside>
       </div>
@@ -120,24 +182,45 @@
     HighfieldQR.create(document.getElementById("qrCode"),url);
 
     document.getElementById("certificatePreviewTrigger").addEventListener("click",openPreview);
-    document.getElementById("downloadPdfButton").addEventListener("click",() => HighfieldPDF.download(certificate));
+    document.getElementById("downloadPdfButton").addEventListener("click",async () => {
+      showToast("Preparing your PDF...");
+      await HighfieldPDF.download(rawCertificate);
+    });
     document.getElementById("printButton").addEventListener("click",() => window.print());
-    document.getElementById("shareButton").addEventListener("click",() => U.share({
+
+    const shareData = {
       title:"Highfield Egypt Certificate",
-      text:`Verify certificate ${certificate["Certificate No"] || queryNumber}`,
+      text:`Verify certificate ${certificate.serial}`,
       url
-    }));
-    document.getElementById("copyLinkButton").addEventListener("click",async event => {
-      await U.copyText(url);
-      event.currentTarget.textContent = "Link Copied";
-      setTimeout(() => event.currentTarget.textContent = "Copy Verification Link",1400);
+    };
+
+    document.getElementById("shareButton").addEventListener("click",async () => {
+      await U.share(shareData);
+      showToast("Verification link is ready to share.");
     });
 
+    document.getElementById("sideShareButton").addEventListener("click",async () => {
+      await U.share(shareData);
+      showToast("Verification link is ready to share.");
+    });
+
+    document.getElementById("copyLinkButton").addEventListener("click",async event => {
+      await U.copyText(url);
+      event.currentTarget.textContent = "Copied";
+      showToast("Verification link copied.");
+      setTimeout(() => event.currentTarget.textContent = "Copy Link",1400);
+    });
+
+    document.getElementById("verifyAnotherButton").addEventListener("click",resetSearch);
+
     history.replaceState({}, "", location.pathname + "?certificate=" + encodeURIComponent(queryNumber));
+    setTimeout(() => resultArea.scrollIntoView({behavior:"smooth",block:"start"}),120);
   }
 
   function renderNotFound(queryNumber){
     currentCertificate = null;
+    currentQueryNumber = queryNumber;
+
     const message = encodeURIComponent(
       `Hello Highfield Egypt, I searched for certificate number ${queryNumber}, but it was not found. I would like to ask about the certificate or apply for an upcoming program.`
     );
@@ -171,11 +254,8 @@
       </section>
     `;
 
-    document.getElementById("searchAgainButton").addEventListener("click",() => {
-      resultArea.innerHTML = "";
-      input.focus();
-      window.scrollTo({top:0,behavior:"smooth"});
-    });
+    document.getElementById("searchAgainButton").addEventListener("click",resetSearch);
+    setTimeout(() => resultArea.scrollIntoView({behavior:"smooth",block:"center"}),120);
   }
 
   function renderServiceError(){
@@ -194,6 +274,15 @@
         </div>
       </section>
     `;
+    showToast("Could not connect to the database.","error");
+  }
+
+  function resetSearch(){
+    resultArea.innerHTML = "";
+    input.value = "";
+    history.replaceState({},"",location.pathname);
+    window.scrollTo({top:0,behavior:"smooth"});
+    setTimeout(() => input.focus(),500);
   }
 
   async function verifyCertificate(){
@@ -202,6 +291,7 @@
     if(!queryNumber){
       input.focus();
       input.setAttribute("aria-invalid","true");
+      showToast("Enter a certificate number first.","error");
       return;
     }
 
