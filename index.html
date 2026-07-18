@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Verify certificates issued by Highfield Egypt.">
+<title>Highfield Egypt | Certificate Verification</title>
+
+<style>
+:root{
+  --navy:#061943;
+  --navy2:#0b2c68;
+  --blue:#176cff;
+  --blue2:#2d80ff;
+  --white:#fff;
+  --muted:#b9c6df;
+  --green:#16a34a;
+  --red:#dc2626;
+  --amber:#d97706;
+}
+
+*{box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--white);
+  background:
+    radial-gradient(circle at 50% 18%,rgba(30,98,255,.22),transparent 34%),
+    linear-gradient(135deg,#001033 0%,#072154 50%,#000b28 100%);
+}
+
+.page{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+main{
+  width:min(1120px,calc(100% - 32px));
+  margin:0 auto;
+  padding:68px 0 40px;
+  flex:1;
+}
+
+.hero{
+  text-align:center;
+  margin-bottom:44px;
+}
+
+.hero h1{
+  margin:0;
+  font-size:clamp(46px,7vw,78px);
+  line-height:1.05;
+  font-weight:800;
+  letter-spacing:-2px;
+}
+
+.hero h2{
+  margin:26px 0 18px;
+  font-size:clamp(27px,3vw,38px);
+}
+
+.hero p{
+  margin:0;
+  font-size:clamp(17px,2vw,21px);
+  line-height:1.65;
+  color:rgba(255,255,255,.9);
+}
+
+.panel{
+  padding:32px 40px 34px;
+  border:1px solid rgba(75,136,255,.35);
+  border-radius:18px;
+  background:linear-gradient(135deg,rgba(7,43,101,.88),rgba(2,20,58,.9));
+  box-shadow:0 28px 80px rgba(0,0,0,.28);
+}
+
+.panel-title{
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  min-height:58px;
+  padding-bottom:20px;
+  margin-bottom:26px;
+  border-bottom:1px solid rgba(130,165,235,.22);
+  color:var(--blue2);
+  font-size:21px;
+  font-weight:700;
+}
+
+.panel-title:after{
+  content:"";
+  position:absolute;
+  bottom:-1px;
+  left:50%;
+  transform:translateX(-50%);
+  width:48%;
+  height:4px;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--blue),var(--blue2));
+}
+
+.icon{
+  width:30px;
+  height:30px;
+  flex:0 0 auto;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.search-form{
+  display:flex;
+  min-height:84px;
+  border-radius:14px;
+  overflow:hidden;
+  background:white;
+  box-shadow:0 14px 35px rgba(0,0,0,.2);
+}
+
+.input-wrap{
+  position:relative;
+  flex:1;
+  display:flex;
+  align-items:center;
+}
+
+.input-wrap .icon{
+  position:absolute;
+  left:27px;
+  color:#08245d;
+  pointer-events:none;
+}
+
+#certificate{
+  width:100%;
+  height:84px;
+  padding:0 24px 0 76px;
+  border:none;
+  outline:none;
+  background:transparent;
+  color:#071a47;
+  font-size:clamp(17px,2vw,22px);
+  font-weight:500;
+}
+
+#certificate::placeholder{color:#9aa8c3}
+
+#certificate:focus{
+  box-shadow:inset 0 0 0 3px rgba(31,111,255,.15);
+}
+
+.verify-btn{
+  width:205px;
+  min-width:205px;
+  border:none;
+  border-radius:14px;
+  color:white;
+  background:linear-gradient(135deg,#0e5fff,#1979ff);
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:13px;
+  font-size:21px;
+  font-weight:700;
+  transition:.2s ease;
+}
+
+.verify-btn:hover{
+  filter:brightness(1.08);
+  transform:translateY(-1px);
+  box-shadow:0 12px 32px rgba(23,109,255,.35);
+}
+
+.verify-btn:disabled{
+  opacity:.72;
+  cursor:not-allowed;
+  transform:none;
+}
+
+.helper{
+  margin:28px 0 0;
+  text-align:center;
+  color:rgba(255,255,255,.88);
+  font-size:18px;
+  line-height:1.55;
+}
+
+#result{
+  margin-top:28px;
+}
+
+.message{
+  padding:22px 24px;
+  border-radius:14px;
+  text-align:center;
+  font-size:17px;
+  line-height:1.5;
+  background:rgba(5,35,88,.9);
+  border:1px solid rgba(95,150,255,.28);
+  box-shadow:0 18px 45px rgba(0,0,0,.22);
+}
+
+.message.error{
+  color:#ffdcdc;
+  background:rgba(105,16,28,.84);
+  border-color:rgba(239,68,68,.5);
+}
+
+.result-card{
+  overflow:hidden;
+  border-radius:20px;
+  background:linear-gradient(135deg,#fff,#f1f7ff);
+  color:#071a47;
+  border:1px solid rgba(82,142,255,.35);
+  box-shadow:0 30px 75px rgba(0,0,0,.3);
+  animation:show .4s ease;
+}
+
+@keyframes show{
+  from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.result-head{
+  padding:26px 30px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+  color:white;
+  background:linear-gradient(135deg,#063276,#001a4d);
+}
+
+.result-title{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.check{
+  width:54px;
+  height:54px;
+  flex:0 0 54px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:var(--green);
+  box-shadow:0 8px 22px rgba(34,197,94,.35);
+}
+
+.check .icon{
+  width:30px;
+  height:30px;
+  stroke-width:2.5;
+}
+
+.result-head h3{
+  margin:0 0 5px;
+  font-size:24px;
+}
+
+.result-head p{
+  margin:0;
+  color:rgba(255,255,255,.78);
+  font-size:14px;
+}
+
+.status{
+  min-width:92px;
+  padding:10px 18px;
+  border-radius:999px;
+  text-align:center;
+  text-transform:uppercase;
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:.5px;
+}
+
+.status.valid{color:#087438;background:#dcfce7;border:1px solid #86efac}
+.status.expired{color:#985e00;background:#fef3c7;border:1px solid #fcd34d}
+.status.revoked,.status.invalid{color:#a11212;background:#fee2e2;border:1px solid #fca5a5}
+
+.result-body{padding:30px}
+
+.holder{
+  margin-bottom:26px;
+  padding-bottom:24px;
+  border-bottom:1px solid #dce6f5;
+}
+
+.holder-label{
+  margin:0 0 6px;
+  color:#64748b;
+  font-size:13px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+}
+
+.holder-name{
+  margin:0;
+  color:#06245c;
+  font-size:clamp(24px,3vw,31px);
+  line-height:1.3;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:18px;
+}
+
+.detail{
+  min-height:82px;
+  padding:16px 18px;
+  border:1px solid #e0e8f4;
+  border-radius:12px;
+  background:#f8fbff;
+}
+
+.detail.full{grid-column:1/-1}
+
+.label{
+  display:block;
+  margin-bottom:7px;
+  color:#60708d;
+  font-size:12px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.65px;
+}
+
+.value{
+  display:block;
+  color:#071a47;
+  font-size:16px;
+  font-weight:700;
+  line-height:1.4;
+  overflow-wrap:anywhere;
+}
+
+.result-note{
+  padding:18px 30px;
+  text-align:center;
+  color:#53647f;
+  background:#eef4fb;
+  border-top:1px solid #dae4f2;
+  font-size:13px;
+  line-height:1.55;
+}
+
+.features{
+  width:min(1040px,100%);
+  margin:48px auto 0;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:30px;
+}
+
+.feature{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  min-height:100px;
+}
+
+.feature:not(:last-child){
+  padding-right:30px;
+  border-right:1px solid rgba(135,169,230,.24);
+}
+
+.feature-circle{
+  width:86px;
+  height:86px;
+  flex:0 0 86px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  color:var(--blue2);
+  background:radial-gradient(circle,rgba(19,100,255,.22),rgba(10,48,118,.27));
+}
+
+.feature-circle .icon{
+  width:42px;
+  height:42px;
+}
+
+.feature h3{margin:0 0 8px;font-size:18px}
+.feature p{margin:0;color:rgba(255,255,255,.82);line-height:1.55}
+
+footer{
+  padding:26px 24px 34px;
+  text-align:center;
+  color:rgba(255,255,255,.76);
+  font-size:14px;
+}
+
+footer a{
+  color:var(--blue2);
+  text-decoration:none;
+}
+
+.sep{margin:0 14px;color:rgba(255,255,255,.3)}
+
+.spinner{
+  width:23px;
+  height:23px;
+  border:3px solid rgba(255,255,255,.35);
+  border-top-color:white;
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:900px){
+  .features{grid-template-columns:1fr;max-width:650px;gap:14px}
+  .feature{padding:18px 0}
+  .feature:not(:last-child){
+    padding-right:0;
+    border-right:none;
+    border-bottom:1px solid rgba(135,169,230,.22)
+  }
+}
+
+@media(max-width:700px){
+  main{width:min(100% - 24px,1120px);padding-top:46px}
+  .hero h1{letter-spacing:-1px}
+  .panel{padding:24px 18px 26px}
+  .panel-title:after{width:80%}
+  .search-form{display:block;background:transparent;overflow:visible;box-shadow:none}
+  .input-wrap{
+    background:white;
+    border-radius:13px;
+    overflow:hidden;
+    box-shadow:0 14px 35px rgba(0,0,0,.18)
+  }
+  #certificate{height:70px;padding-left:66px;font-size:16px}
+  .input-wrap .icon{left:22px;width:28px;height:28px}
+  .verify-btn{
+    width:100%;
+    min-width:0;
+    height:64px;
+    margin-top:14px;
+    border-radius:13px;
+    font-size:18px
+  }
+  .helper{margin-top:22px;font-size:15px}
+  .result-head{align-items:flex-start;padding:23px 20px}
+  .result-head h3{font-size:20px}
+  .check{width:46px;height:46px;flex-basis:46px}
+  .status{min-width:auto;padding:8px 12px;font-size:11px}
+  .result-body{padding:22px 18px}
+  .grid{grid-template-columns:1fr}
+  .detail.full{grid-column:auto}
+  footer{line-height:1.9}
+  footer .sep{display:none}
+  footer span,footer a{display:block}
+}
+
+@media print{
+  body{background:white}
+  .hero,.panel,.features,footer{display:none}
+  #result{margin:0}
+  .result-card{box-shadow:none;border:1px solid #ccd6e5}
+}
+</style>
+</head>
+
+<body>
+<div class="page">
+<main>
+
+  <section class="hero">
+    <h1>Highfield Egypt</h1>
+    <h2>Certificate Verification</h2>
+    <p>
+      Verify the authenticity of Highfield Egypt certificates.<br>
+      Search using the certificate number.
+    </p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-title">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+        <circle cx="9" cy="10" r="2"></circle>
+        <path d="M6.5 16c.8-1.8 4.2-1.8 5 0"></path>
+        <path d="M15 9h3"></path>
+        <path d="M15 13h3"></path>
+      </svg>
+      <span>Search by Certificate Number</span>
+    </div>
+
+    <form id="verificationForm" class="search-form">
+      <div class="input-wrap">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+          <circle cx="9" cy="10" r="2"></circle>
+          <path d="M6.5 16c.8-1.8 4.2-1.8 5 0"></path>
+          <path d="M15 9h3"></path>
+          <path d="M15 13h3"></path>
+        </svg>
+
+        <input
+          id="certificate"
+          type="text"
+          placeholder="Enter Certificate Number"
+          autocomplete="off"
+          spellcheck="false"
+        >
+      </div>
+
+      <button id="verifyButton" class="verify-btn" type="submit">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="m20 20-4-4"></path>
+        </svg>
+        <span id="buttonText">Verify</span>
+      </button>
+    </form>
+
+    <p class="helper">
+      Please enter the certificate number exactly as it appears on the certificate.
+    </p>
+  </section>
+
+  <section id="result" aria-live="polite"></section>
+
+  <section class="features">
+    <article class="feature">
+      <div class="feature-circle">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3 4.5 6v5.5c0 4.5 3.1 7.7 7.5 9.5 4.4-1.8 7.5-5 7.5-9.5V6L12 3Z"></path>
+          <path d="m9 12 2 2 4-4"></path>
+        </svg>
+      </div>
+      <div>
+        <h3>100% Secure</h3>
+        <p>Data verified directly from official records.</p>
+      </div>
+    </article>
+
+    <article class="feature">
+      <div class="feature-circle">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 2h9l4 4v16H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"></path>
+          <path d="M14 2v5h5"></path>
+          <path d="M8 11h7"></path>
+          <path d="M8 15h5"></path>
+        </svg>
+      </div>
+      <div>
+        <h3>Trusted Verification</h3>
+        <p>Certificates issued by Highfield Egypt.</p>
+      </div>
+    </article>
+
+    <article class="feature">
+      <div class="feature-circle">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M13.2 2 5 13.2h5.8L9.9 22 19 9.7h-5.8L13.2 2Z"></path>
+        </svg>
+      </div>
+      <div>
+        <h3>Instant Results</h3>
+        <p>Get immediate verification results.</p>
+      </div>
+    </article>
+  </section>
+
+</main>
+
+<footer>
+  <span>© 2026 Highfield Egypt. All rights reserved.</span>
+  <span class="sep">|</span>
+  <a href="#">Privacy Policy</a>
+  <span class="sep">|</span>
+  <a href="#">Terms of Use</a>
+</footer>
+</div>
+
+<script>
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbxiY5-9GpvLKwL3jUvn5H-7ooguNA40THLdqZqcqTQL32-Hht2DgMZIW8nl8gvMllg0jA/exec";
+
+const form = document.getElementById("verificationForm");
+const input = document.getElementById("certificate");
+const result = document.getElementById("result");
+const button = document.getElementById("verifyButton");
+const buttonText = document.getElementById("buttonText");
+
+form.addEventListener("submit",function(e){
+  e.preventDefault();
+  verifyCertificate();
+});
+
+window.addEventListener("DOMContentLoaded",function(){
+  const params = new URLSearchParams(window.location.search);
+  const cert = params.get("certificate");
+
+  if(cert){
+    input.value = cert.trim();
+    verifyCertificate();
+  }
+});
+
+function setLoading(loading){
+  button.disabled = loading;
+  const icon = button.querySelector("svg");
+
+  if(loading){
+    icon.style.display = "none";
+    buttonText.innerHTML = '<span class="spinner"></span>';
+  }else{
+    icon.style.display = "block";
+    buttonText.textContent = "Verify";
+  }
+}
+
+function esc(value){
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function val(value){
+  const clean = String(value ?? "").trim();
+  return clean ? esc(clean) : "—";
+}
+
+function statusClass(status){
+  const s = String(status ?? "").trim().toLowerCase();
+  if(s === "valid") return "valid";
+  if(s === "expired") return "expired";
+  if(s === "revoked") return "revoked";
+  return "invalid";
+}
+
+function detail(label,value,full=false){
+  return `
+    <div class="detail ${full ? "full" : ""}">
+      <span class="label">${esc(label)}</span>
+      <span class="value">${val(value)}</span>
+    </div>
+  `;
+}
+
+async function verifyCertificate(){
+  const number = input.value.trim();
+  result.innerHTML = "";
+
+  if(!number){
+    result.innerHTML = '<div class="message error">Please enter a certificate number.</div>';
+    input.focus();
+    return;
+  }
+
+  setLoading(true);
+
+  try{
+    const response = await fetch(
+      API_URL + "?certificate=" + encodeURIComponent(number)
+    );
+
+    if(!response.ok){
+      throw new Error("Service error");
+    }
+
+    const data = await response.json();
+
+    if(!data.success || !data.certificate){
+      result.innerHTML = `
+        <div class="message error">
+          No certificate was found with this number.
+          Please check the number and try again.
+        </div>
+      `;
+      return;
+    }
+
+    const c = data.certificate;
+    const status = c["Status"] || "Unknown";
+    const expiry = c["Expiry Date"] || c["Expirty Date"] || "";
+
+    result.innerHTML = `
+      <section class="result-card">
+        <div class="result-head">
+          <div class="result-title">
+            <div class="check">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m5 12 4 4L19 6"></path>
+              </svg>
+            </div>
+            <div>
+              <h3>Certificate Verified</h3>
+              <p>This record was found in the official Highfield Egypt database.</p>
+            </div>
+          </div>
+
+          <span class="status ${statusClass(status)}">${val(status)}</span>
+        </div>
+
+        <div class="result-body">
+          <div class="holder">
+            <p class="holder-label">Certificate Holder</p>
+            <h4 class="holder-name">${val(c["Full Name"])}</h4>
+          </div>
+
+          <div class="grid">
+            ${detail("Certificate Number",c["Certificate No"])}
+            ${detail("License Number",c["License Number"])}
+            ${detail("Program Name",c["Program Name"],true)}
+            ${detail("Issue Date",c["Issue Date"])}
+            ${detail("Expiry Date",expiry)}
+            ${detail("Training Hours",c["Training Hours"])}
+            ${detail("CPD Points",c["CPD Points"])}
+            ${detail("Accreditation Code",c["Accreditation Code"])}
+            ${detail("Instructor",c["Instructor Name"])}
+            ${detail("Provider",c["Provider"])}
+            ${detail("Country",c["Country"])}
+          </div>
+        </div>
+
+        <div class="result-note">
+          This verification confirms that the certificate record exists in the
+          official Highfield Egypt database. It does not constitute a professional
+          license or authorization to practice.
+        </div>
+      </section>
+    `;
+
+    history.replaceState(
+      {},
+      "",
+      location.pathname + "?certificate=" + encodeURIComponent(number)
+    );
+
+    result.scrollIntoView({behavior:"smooth",block:"start"});
+
+  }catch(error){
+    console.error(error);
+    result.innerHTML = `
+      <div class="message error">
+        The verification service is temporarily unavailable.
+        Please try again.
+      </div>
+    `;
+  }finally{
+    setLoading(false);
+  }
+}
+</script>
+</body>
+</html>
